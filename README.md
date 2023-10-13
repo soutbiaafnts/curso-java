@@ -32,4 +32,4 @@ Nessa aula implementei melhorias e funcionalidades para enriquecer a interativid
 - [x] Atributo request
 - [x] Validação horas
 - [x] Lista tarefas
-- [ ] Update tarefas
+- [x] Update tarefas
