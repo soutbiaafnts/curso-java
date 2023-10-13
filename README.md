@@ -33,3 +33,4 @@ Nessa aula implementei melhorias e funcionalidades para enriquecer a interativid
 - [x] Validação horas
 - [x] Lista tarefas
 - [x] Update tarefas
+- [x] Update parcial
