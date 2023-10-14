@@ -54,16 +54,23 @@ public class TaskController {
 
    // http://localhost:8080/tasks/"id"
    @PutMapping("/{id}")
-   public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id) {
+   public ResponseEntity update(@RequestBody TaskModel taskModel, @PathVariable UUID id, HttpServletRequest request) {
+       var task = this.taskRepository.findById(id).orElse(null);
+
+      if (task == null) {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+               .body("Tarefa inexistente");
+      }
+
       var idUser = request.getAttribute("idUser");
 
-      // retorna a task existente
-      var task = this.taskRepository.findById(id).orElse(null);
+      if (!task.getIdUser().equals(idUser)) {
+         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+               .body("Usuário não tem permissão para alterar a tarefa");
+      }
 
-      // executa o Utils para converter as propriedades
       Utils.copyNonNullProperties(taskModel, task);
-
-      
-      return this.taskRepository.save(task);
+      var taskUpdated = this.taskRepository.save(task);
+      return ResponseEntity.ok().body(taskUpdated);
    }
 }
