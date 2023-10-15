@@ -17,57 +17,57 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class FilterTaskAuth extends OncePerRequestFilter {
 
-   @Autowired
-   private IUserRepository userRepository;
+    @Autowired
+    private IUserRepository userRepository;
 
-   @Override
-   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-         throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-      var servletPath = request.getServletPath();
+        var servletPath = request.getServletPath();
 
-      if (servletPath.startsWith("/tasks/")) {
+        if (servletPath.startsWith("/tasks/")) {
 
-         // get authentication (user e password) -> separando o usuário da senha
-         var authorization = request.getHeader("Authorization");
+            // get authentication (user e password) -> separando o usuário da senha
+            var authorization = request.getHeader("Authorization");
 
-         /*
-          * ? tira o "Basic" e deixa só o resto (calculando o tamanho da palavra e
-          * ? removendo os espaços
-          */
-         var authEncoded = authorization.substring("Basic".length()).trim();
+            /**
+             * tira o "Basic" e deixa só o resto (calculando o tamanho da palavra e
+             * removendo os espaços
+             */
+            var authEncoded = authorization.substring("Basic".length()).trim();
 
-         // ? cria um decode (um array de bytes)
-         byte[] authDecoded = Base64.getDecoder().decode(authEncoded);
+            // cria um decode (um array de bytes)
+            byte[] authDecode = Base64.getDecoder().decode(authEncoded);
 
-         // ? converter o array de bytes para string
-         var authString = new String(authDecoded);
+            // converter o array de bytes para string
+            var authString = new String(authDecode);
 
-         // ? ["username", "password"]
-         String[] credentials = authString.split(":");
-         String username = credentials[0];
-         String password = credentials[1];
+            // ["username", "password"]
+            String[] credentials = authString.split(":");
+            String username = credentials[0];
+            String password = credentials[1];
 
-         // user validation no BD
-         var user = this.userRepository.findByUsername(username);
-         if (user == null) {
-            response.sendError(401);
-         } else {
-            // password validation no BD
-            var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
-            if (passwordVerify.verified) { // retorna (true || false)
-               // go
-               request.setAttribute("idUser", user.getId());
-               filterChain.doFilter(request, response);
+            // user validation no BD
+            var user = this.userRepository.findByUsername(username);
+            if (user == null) {
+                response.sendError(401, "Usuário sem autorização");
             } else {
-               response.sendError(401);
+                // password validation
+                var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+                if (passwordVerify.verified) { // retorna (true || false)
+                    // go
+                    request.setAttribute("idUser", user.getId());
+                    filterChain.doFilter(request, response);
+                } else {
+                    response.sendError(401, "Usuário sem autorização");
+                }
+
             }
+        } else {
+            filterChain.doFilter(request, response);
+        }
 
-         }
-      } else {
-         filterChain.doFilter(request, response);
-      }
-
-   }
+    }
 
 }
