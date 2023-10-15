@@ -38,5 +38,5 @@ Nessa aula implementei melhorias e funcionalidades para enriquecer a interativid
 ## Aula 05 - Deploy do Back-End
  Nessa aula aprendi sobre validações, ferramentas e deploy da aplicação Spring Boot. Conheci ferramentas valiosas e coloquei o projeto no mundo.
 
- - [ ] Validando usuário dono (Deu erro na validação)
- - [ ] 
+ - [x] Validando usuário dono
+ - [x] Try catch 
