@@ -39,4 +39,6 @@ Nessa aula implementei melhorias e funcionalidades para enriquecer a interativid
  Nessa aula aprendi sobre validações, ferramentas e deploy da aplicação Spring Boot. Conheci ferramentas valiosas e coloquei o projeto no mundo.
 
  - [x] Validando usuário dono
- - [x] Try catch 
+ - [x] Try catch
+ - [x] Live reload
+ - [x] Deploy
