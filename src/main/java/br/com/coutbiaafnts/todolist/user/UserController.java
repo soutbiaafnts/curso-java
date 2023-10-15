@@ -14,25 +14,25 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 @RequestMapping("/users")
 public class UserController {
 
-   @Autowired
-   private IUserRepository userRepository;
+    @Autowired
+    private IUserRepository userRepository;
 
-   @PostMapping("/")
-   public ResponseEntity create(@RequestBody UserModel userModel) {
-      var user = this.userRepository.findByUsername(userModel.getUsername());
+    @PostMapping("/")
+    public ResponseEntity create(@RequestBody UserModel userModel) {
+        var user = this.userRepository.findByUsername(userModel.getUsername());
 
-      if (user != null) {
-         System.out.println("Usuário já existe!");
-         // mensagem de erro
-         // status code -> status dentro da requisição (200 sucesso || 400)
-         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe!");
-      }
+        if (user != null) {
+            System.out.println("Usuário já existe!");
+            // mensagem de erro
+            // status code -> status dentro da requisição (200 sucesso || 400)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe!");
+        }
 
-      var passwordHashred = BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray());
+        var passwordHashred = BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray());
 
-      userModel.setPassword(passwordHashred);
+        userModel.setPassword(passwordHashred);
 
-      var userCreated = this.userRepository.save(userModel);
-      return ResponseEntity.status(HttpStatus.OK).body(userCreated);
-   }
+        var userCreated = this.userRepository.save(userModel);
+        return ResponseEntity.status(HttpStatus.OK).body(userCreated);
+    }
 }
