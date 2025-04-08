@@ -41,4 +41,4 @@ Nessa aula implementei melhorias e funcionalidades para enriquecer a interativid
  - [x] Validando usuário dono
  - [x] Try catch
  - [x] Live reload
- - [x] Deploy
+ - [] Deploy
